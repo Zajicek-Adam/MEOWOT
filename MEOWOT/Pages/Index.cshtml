@@ -1,0 +1,108 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    Layout = "_Layout-Index";
+}
+<article id="first" class="full grid">
+    <div class="hidden fh" id="heading">
+        <h1>
+            01
+        </h1>
+        <h2>
+            Collect&amp;Share
+        </h2>
+        <h3>
+            All your favourite images<br />arranged in albums
+        </h3>
+    </div>
+    <div class="hidden fh" id="bg">
+        <partial name="_LoginPartial" />
+        <img id="fancyhorse" height="520" src="~/img/horse.png" />
+    </div>
+</article>
+<article class="full">
+    <div style="flex-direction: column">
+        <h2 style="margin-top: 2em;" class="tl-h hidden">Be up to date with meowmeows</h2>
+        <div style="flex-wrap: wrap;" class="card-container hidden">
+            <div class="card">
+                <div class="image"></div>
+                <div class="card-content">
+                    <p>A cool cat or sum</p>
+                    <p><small>By Mulligan</small></p>
+                </div>
+            </div>
+            <div class="card wide">
+                <div style="background-image: url('../img/railway.png')" class="image"></div>
+                <div class="card-content">
+                    <p>Cba frfr no cap</p>
+                    <p><small>By Mulligan</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+<article class="full bdsm">
+    <h2 class="tl-h hidden">Why meowot?</h2>
+    <div class="card-container hidden">
+        <h1 style="position: absolute">BDSM</h1>
+
+        <div class="card">
+            <div style="background-image: url('../img/branding.png')" class="image"></div>
+            <div class="card-content">
+                <p>Branding</p>
+            </div>
+        </div>
+        <div class="card">
+            <div style="background-image: url('../img/development.png')" class="image"></div>
+            <div class="card-content">
+                <p>Development</p>
+            </div>
+        </div>
+        <div class="card">
+            <div style="background-image: url('../img/sales.png')" class="image"></div>
+            <div class="card-content">
+                <p>Sales</p>
+            </div>
+        </div>
+        <div class="card">
+            <div style="background-image: url('../img/marketing.png')" class="image"></div>
+            <div class="card-content">
+                <p>Marketing</p>
+            </div>
+        </div>
+    </div>
+</article>
+<article class="full rev">
+    <h2 class="tl-h hidden">What do meowmeows say</h2>
+    <div class="card-container hidden">
+        <div class="card">
+            <div style="background-image: url('../img/random.png')" class="image"></div>
+            <div class="card-content">
+                <p>Ofeliya</p>
+                <p><small>No I do not know what is "meowot", please leave my house immediately.</small></p>
+            </div>
+        </div>
+        <div class="card">
+            <div style="background-image: url('../img/random1.png')" class="image"></div>
+            <div class="card-content">
+                <p>Avner</p>
+                <p><small>The pandora papers revealed the scale of the corruption taking place in the western world and yet had little to none consequences.</small></p>
+            </div>
+        </div>
+        <div class="card">
+            <div style="background-image: url('../img/radnom2.png')" class="image"></div>
+            <div class="card-content">
+                <p>Parvati</p>
+                <p><small>Jeffrey Epstein did not commit suicide.</small></p>
+            </div>
+        </div>
+    </div>
+</article>
+<article class="full" id="moon">
+    <div class="hidden">
+        <img src="~/img/rocket.png" />
+        <h2>TO THE MOON <br />WITH MEOWOT</h2>
+    </div>
+    <a class="hidden" asp-area="Identity" asp-page="/Account/Register">SIGN UP</a>
+</article>

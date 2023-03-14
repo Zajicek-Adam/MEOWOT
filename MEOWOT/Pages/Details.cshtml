@@ -1,0 +1,39 @@
+﻿@page
+@model MEOWOT.Pages.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <div>
+        <h4>StoredFile</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StoredFile.UploadedAt)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StoredFile.UploadedAt)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StoredFile.OriginalName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StoredFile.OriginalName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StoredFile.ContentType)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StoredFile.ContentType)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-page-handler="Delete" asp-route-id="@Model.StoredFile?.Id">Delete</a> |
+        <a asp-page="/Browse">Back to List</a>
+    </div>
+</div>

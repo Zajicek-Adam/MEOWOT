@@ -1,0 +1,131 @@
+﻿@page
+@model BrowseModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<article style="flex-direction: column; align-items: center;" id="page-content" class="full hidden up">
+    <h2 style="margin-top: 2.25em; margin-bottom: 0.5em; text-align: center" class="hidden">Newest posts</h2>
+
+    <div style="flex-wrap: wrap; gap: 3em; " class="card-container hidden">
+        @if (Model.Files.Count > 0)
+        {
+            @if (Model.Files.Any(e => e.Public))
+            {
+                @foreach (var f in Model.Files.Where(e => e.Public).OrderByDescending(i => i.DateTaken).Take(12))
+
+                {
+                    <div id="smaller-card" style="padding-bottom: 1rem;" class="card hidden">
+                        <div class="card-image-container" style="width: inherit; height: 235px"><img class="card-image" src="@Url.Page("/GalleryPhotos","Thumbnail", new {filename =f.Id })" /></div>
+                        <div class="card-content">
+                            <p>
+                                <small>
+                                    @if (f.Title != "")
+                                    {
+                                        @f.Title
+                                    }
+                                    else
+                                    {
+                                        @if (f.OriginalName.Length > 16)
+                                            @f.OriginalName.Substring(0, 16)
+                                            else
+                                            {
+                                                @f.OriginalName
+                                            }
+                                    }
+                                </small>
+                            </p>
+                        </div>
+                        <a class="download" asp-page-handler="download" asp-route-filename="@f.Id"><img src="~/img/download.png" />Download</a>
+                        <a class="open" style="background-color: var(--dark-accent); color: var(--light-accent); padding: 1em 2em; border-radius: 15px;cursor: pointer">Open</a>
+
+                    </div>
+
+                    @* <a class="btn btn-sm btn-secondary" asp-page-handler="thumbnail" asp-route-filename="@f.Id">Thumbnail</a>
+                        <a class="btn btn-sm btn-secondary" asp-page-handler="thumbnail" asp-route-filename="@f.Id" asp-route-type="1">Miniature</a>
+                    *@
+                }
+            }
+            else
+            {
+                <h3 style="right: 0">There are no Public files</h3>
+            }
+        }
+        else
+        {
+            <h3 style="right: 0">There are no files uploaded yet.</h3>
+        }
+    </div>
+</article>
+<article class="full hidden up" style="flex-direction: column; align-items: center">
+    <h2 style="margin-top: 3em; margin-bottom: 1em; text-align: center" class="hidden">Discover public galleries</h2>
+
+    <div style="flex-wrap: wrap; gap: 5em;" class="card-container hidden">
+        @if (Model.Galleries.Count > 0)
+        {
+            @if (Model.Galleries.Any(e => e.Public))
+            {
+                Random rnd = new Random();
+                @foreach (var f in Model.Galleries.Where(e => e.Public).OrderBy(e => rnd.Next()).Take(5))
+                {
+                    <a style="position: relative; color: var(--light-accent)" asp-page="GalleryPhotos" asp-route-id="@f.Id" id="smaller-card" class="card hidden">
+                        @if (f.Images.Count == 0)
+                        {
+                            <div style="align-items: center; height: 100%;" class="card-content">
+                                <h3 style="right: 0; color: var(--dark-accent); text-align: center">@f.GalleryName</h3>
+                                <p style="color: var(--dark-accent)"><small>By @f.Uploader</small></p>
+                            </div>
+                        }
+                        else
+                        {
+                            Console.WriteLine("WHAAAAAAAAAAAAAAAT" + f.Images.Count);
+                            <img style="position: absolute; height: 120%    ; left: 50%; transform: translateX(-50%); z-index: -1; filter: brightness(0.3)" src="@Url.Page("/GalleryPhotos", "Thumbnail", new { filename = f.Images.OrderByDescending(i => i.UploadedAt).ElementAt(0).Id })" />
+                            <div style="align-items: center; height: 100%;" class="card-content">
+                                <h3 style="right: 0; color: var(--light-accent); text-align: center">@f.GalleryName</h3>
+                                <p><small>By @f.Uploader</small></p>
+                            </div>
+                        }
+                    </a>
+                }
+            }
+            else
+            {
+                <h3 style="right: 0">There are no Public galleries</h3>
+            }
+        }
+        else
+        {
+            <h3 style="right: 0">There are no public galleries yet.</h3>
+        }
+    </div>
+</article>
+@if (Model.Files.Count > 0)
+{
+    {
+        @foreach (var f in Model.Files.Where(i => i.Public == true).OrderByDescending(i => i.DateTaken).Take(12))
+        {
+            <div style="display: none" class="popup popup-hide">
+                <img class="popup-image" src="@Url.Page("/Browse", "File", new { id = f.Id })" />
+            </div>
+        }
+    }
+}
+<style>
+
+    .navbar-nav {
+        justify-content: flex-end;
+        position: relative;
+        right: 2em;
+    }
+
+        .navbar-nav > * {
+            margin: 0 1em;
+        }
+
+        .navbar-nav a {
+            color: var(--dark-accent);
+        }
+
+    #links > .navbar-nav > form > button {
+        border: var(--dark-accent) 2px solid;
+    }
+</style>

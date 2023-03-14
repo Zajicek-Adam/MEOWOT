@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEOWOT | Upload</title>
+</head>
+<body>
+    <form id="files">
+        <input type="file">
+        <input id="ispublic" type="checkbox">jepublic
+        <button type="submit">Send</button>
+    </form>
+    <script src="./js/tus-min.js"></script>
+    <script>
+
+        document.getElementById("files").addEventListener("submit", function (e) {
+            // Get the selected file from the input element
+            var file = e.target.files[0]
+            // Create a new tus upload
+            var upload = new tus.Upload(file, {
+                endpoint: "https://localhost:7009/Uploads",
+                retryDelays: [0, 3000, 5000, 10000, 20000],
+                metadata: {
+                    filename: file.name,
+                    filetype: file.type,
+                    ispublic: document.getElementById("ispublic").checked ? "1" : "0"
+                },
+                onError: function (error) {
+                    console.log("Failed because: " + error)
+                },
+                onProgress: function (bytesUploaded, bytesTotal) {
+                    var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
+                    console.log(bytesUploaded, bytesTotal, percentage + "%")
+                },
+                onSuccess: function () {
+                    console.log("Download %s from %s", upload.file.name, upload.url)
+                    //popem vytahovat z kolekce files a až tady zavolat další soubor, for loop nestačí
+                }
+            })
+
+            // Check if there are any previous uploads to continue.
+            upload.findPreviousUploads().then(function (previousUploads) {
+                // Found previous uploads so we select the first one.
+                if (previousUploads.length) {
+                    upload.resumeFromPreviousUpload(previousUploads[0])
+                }
+
+                // Start the upload
+                upload.start()
+            })
+        })
+    </script>\
+</body>
+</html>

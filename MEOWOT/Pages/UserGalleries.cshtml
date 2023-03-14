@@ -1,0 +1,89 @@
+﻿@page
+@model MEOWOT.Pages.UserGalleriesModel
+@using MEOWOT.Model
+@{
+}
+<article id="page-content" class="full gallery-grid hidden up">
+
+    @if (Model.Galleries.Count > 0)
+    {
+        foreach (var f in Model.Galleries)
+            if (f.GetType() == typeof(DefaultGallery))
+            {
+                <div class="item default">
+                    <a id="default-a" asp-area="" asp-route-id="@f.Id" asp-page="GalleryPhotos">@f.GalleryName</a>
+                </div>
+            }
+            else
+            {
+                @if (f.Images != null && f.Images.Count != 0)
+                {
+                    <div style="overflow: hidden; border: none; box-shadow: 1px 2px 10px 2px black;" class="item">
+                        <a style="position: relative; color: var(--light-accent)" asp-area="" asp-route-id="@f.Id" asp-page="GalleryPhotos">
+                            @f.GalleryName
+
+                            <img style="position: absolute; width: 300px; z-index: -1; filter: brightness(0.5)" src="@Url.Page("/GalleryPhotos", "Thumbnail", new { filename = f.Images.OrderByDescending(i => i.UploadedAt).ElementAt(0).Id })" />
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="item">
+                        <a style="text-align: center" asp-area="" asp-route-id="@f.Id" asp-page="GalleryPhotos">
+                            @f.GalleryName
+                        </a>
+                    </div>
+                }
+
+            }
+    }
+    else
+    {
+        <p>There are no Galleries created.</p>
+
+    }
+    <div id="add-btn" class="item add">
+        +
+    </div>
+</article>
+<form method="post" id="modal-form">
+    <h2>Create a gallery.</h2>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-floating">
+        <input asp-for="FormGallery.GalleryName" class="form-control sus" maxlength="32" autocomplete="off" aria-required="true" />
+        <label asp-for="FormGallery.GalleryName" class="form-label">Gallery name</label>
+        <span asp-validation-for="FormGallery.GalleryName" class="text-danger"></span>
+    </div>
+    <div style="margin-top: -2em;">
+        <div class="checkbox">
+            <label asp-for="FormGallery.Public" class="form-label">
+                <input class="form-check-input" asp-for="FormGallery.Public" />
+                Make gallery public
+            </label>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; width: calc(275px + 4em);">
+        <button type="submit" class="">Create</button>
+        <button type="reset" id="close-btn">Close</button>
+    </div>
+</form>
+<style>
+
+    .navbar-nav {
+        justify-content: flex-end;
+        position: relative;
+        right: 2em;
+    }
+
+        .navbar-nav > * {
+            margin: 0 1em;
+        }
+
+        .navbar-nav a {
+            color: var(--dark-accent);
+        }
+
+    #links > .navbar-nav > form > button {
+        border: var(--dark-accent) 2px solid;
+    }
+</style>

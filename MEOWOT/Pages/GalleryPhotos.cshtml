@@ -1,0 +1,152 @@
+﻿@page
+@model MEOWOT.Pages.GalleryPhotosModel
+@using System.Security.Claims;
+@{
+}
+@*if (Model.Files.Count > 0)
+    {
+        foreach (var f in Model.Files)
+        {
+            if (Model.Gallery.Id == f.Gallery.Id || f.Public)
+            {
+
+               <div class="row">
+                    <div class="column">
+                        <a asp-page="./Details" asp-route-id="@f.Id"><img src="@Url.Page("/GalleryPhotos","Thumbnail", new {filename=f.Id }).ToString().Remove(0, 1)" /></a>
+                    </div>
+                </div>
+            }
+        }
+    }
+    else
+    {
+        <p>There are no images uploaded yet.</p>
+
+    }*@
+<article style="display: flex; flex-direction: column; background-color: var(--light-accent)" id="page-content" class="full hidden up">
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 10.5em; margin-bottom: 0.5em; ">
+        <h2 style="text-align: center; box-sizing: border-box" class="hidden">@Model.Gallery.GalleryName</h2>
+        @if (User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault() != null)
+        {
+            if (Model.Gallery.Uploader.Id == User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value && Model.Gallery.GetType() != typeof(MEOWOT.Model.DefaultGallery))
+            {
+                <a style="background-color: #4475c2; color: var(--light-accent); padding: 0.75em 1.25em; border-radius: 15px; font-size: 1.25em; margin-left: 2em;" asp-page="EditGallery" asp-route-id="@Model.Gallery.Id">Edit</a>
+            }
+        }
+    </div>
+
+    @*if (Model.Gallery.Public)
+        {
+            <a asp-route-id="@Model.Gallery.Id" asp-page-handler="Toggle">
+                Private
+            </a>
+        }
+        else
+        {
+            <a asp-route-id="@Model.Gallery.Id" asp-page-handler="Toggle">
+                Public
+            </a>
+        }*@
+
+
+
+    <div class="card-container hidden">
+        @if (Model.Files.Count > 0)
+        {
+            {
+                @foreach (var f in Model.Files.Where(i => i.Gallery.Id == Model.Gallery.Id).OrderByDescending(i => i.DateTaken))
+
+                {
+                    <div id="smaller-card" style="height: 355px" class="card hidden spec">
+                        <div class="card-image-container" style="width: inherit; height: 355px"><img class="card-image" src="@Url.Page("/GalleryPhotos","Thumbnail", new {filename =f.Id }).ToString().Remove(0, 1)" /></div>
+                        @*  <div class="card-content" style="bottom: 0;">
+                                                 <div>
+                                @if (f.Title == string.Empty)
+                                {
+                                    <div id="title-form">
+                                        <input placeholder="Enter title..." type="text" asp-for="@f.Title" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <form id="title-form" method="post" asp-route-file="@(f.Id.ToString() + f.Title)">
+                                        <input placeholder="@f.Title" type="text" asp-for="@f.Title" />
+                                        <button type="submit">Save</button>
+                                    </form>
+                                }
+                            </div>*@
+                        <div class="card-content" style="position: absolute;bottom: 0px; left: 0; height: 205px; gap: 7px;">
+                            <p>
+                                @if (f.Title != "")
+                                {
+                                    @f.Title
+                                }
+                                else
+                                {
+                                    @if (f.OriginalName.Length > 16)
+                                        @f.OriginalName.Substring(0, 16)
+                                        else
+                                        {
+                                            @f.OriginalName
+                                        }
+                                }
+                            </p>
+                            <p>@f.UploadedAt.Day/@f.UploadedAt.Month/@f.UploadedAt.Year</p>
+                            <a class="download" asp-page-handler="download" asp-route-filename="@f.Id"><img src="~/img/download.png" />Download</a>
+                            <div style="display: flex; justify-content: center; gap: 5px;">
+                                <a class="open" style="background-color: var(--dark-accent); color: var(--light-accent); padding: 1em 2em; border-radius: 15px;cursor: pointer">Open</a>
+                                @if (User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault() != null)
+                                {
+                                    if (f.Uploader.Id == User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value)
+                                    {<a style="background-color: #4475c2; color: var(--light-accent); padding: 1em 2em; border-radius: 15px;" asp-page="EditImage" asp-route-id="@f.Id">Edit</a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @* <a class="btn btn-sm btn-secondary" asp-page-handler="thumbnail" asp-route-filename="@f.Id">Thumbnail</a>
+                        <a class="btn btn-sm btn-secondary" asp-page-handler="thumbnail" asp-route-filename="@f.Id" asp-route-type="1">Miniature</a>
+                    *@
+
+                }
+            }
+        }
+        else
+        {
+            <h3 style="right: 0">There are no files uploaded yet.</h3>
+        }
+    </div>
+</article>
+@if (Model.Files.Count > 0)
+{
+    {
+        @foreach (var f in Model.Files.Where(i => i.Gallery.Id == Model.Gallery.Id).OrderByDescending(i => i.DateTaken))
+        {
+            <div style="display: none" class="popup popup-hide">
+                <img class="popup-image" src="@Url.Page("/Browse", "File", new { id = f.Id })" />
+                @*<img class="popup-image" src="@Url.Page("/GalleryPhotos","Thumbnail", new {filename=f.Id })" />*@
+            </div>
+        }
+    }
+}
+<style>
+
+    .navbar-nav {
+        justify-content: flex-end;
+        position: relative;
+        right: 2em;
+    }
+
+        .navbar-nav > * {
+            margin: 0 1em;
+        }
+
+        .navbar-nav a {
+            color: var(--dark-accent);
+        }
+
+    #links > .navbar-nav > form > button {
+        border: var(--dark-accent) 2px solid;
+    }
+</style>

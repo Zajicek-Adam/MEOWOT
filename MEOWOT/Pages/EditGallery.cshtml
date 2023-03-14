@@ -1,0 +1,65 @@
+﻿@page
+@model MEOWOT.Pages.EditGalleryModel
+@{
+}
+@using System.Security.Claims;
+
+<article class="full" style="display: flex;justify-content: center; align-items: center">
+    <form method="post" id="form" enctype="multipart/form-data" class="hidden" style="border-bottom: var(--gray) 2px solid; box-sizing:border-box; gap: 1.25em">
+        <h2 style="position: relative; top: 10px;">Edit gallery.</h2>
+
+        <input type="hidden" asp-for="GalleryId" />
+        <div class="form-floating">
+            <input asp-for="GalleryTitle" class="form-control sus" autocomplete="current-password" aria-required="true" />
+            <label asp-for="GalleryTitle" class="form-label">Title</label>
+            <span asp-validation-for="GalleryTitle" class="text-danger"></span>
+        </div>
+        <div class="checkbox" style="display: flex; justify-content: flex-start; gap: 1em; width: 332px; position: relative; top: 7.5px; ">
+            <input asp-for="@Model.Public" id="ispublic" type="checkbox" style="cursor: pointer; width: 25px; height: 25px;" class="form-check-input" />
+            Make gallery public
+        </div>
+        <div style="display: flex; justify-content: center; align-items: flex-start; width: calc(275px + 4em); flex-flow: column; gap: 3em;">
+            <button style="width: 332px" type="submit" class="">Apply</button>
+            <div style="gap: 2em;">
+
+                @if (Model.Gallery.Uploader.Id == User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value)
+                {
+                    <a style="background-color: #d73636; color: var(--light-accent); padding: 1em 2em; border-radius: 15px; width: 150px; box-sizing: border-box; text-align: center" asp-page-handler="Delete" asp-route-id="@Model.GalleryId">Delete</a>
+                }
+                <a asp-page="/GalleryPhotos" asp-route-id="@Model.Gallery.Id">
+                    <button style="box-sizing: border-box; top: 0;" type="button" id="close-btn">Close</button>
+                </a>
+            </div>
+        </div>
+    </form>
+    @if (!(Model.Gallery.Images.Count == 0))
+    {
+        <div id="content-container-l" style="background-image: url(@Url.Page("/Browse", "File", new { id = Model.Gallery.Images.ElementAt(0).Id })); background-size: cover; background-position: center; background-repeat: no-repeat" class="hidden">
+        </div>
+    }
+    else
+    {
+        <div id="content-container-l" style="background-image: url('../img/horse.png'); background-size: cover; background-position: center; background-repeat: no-repeat" class="hidden">
+        </div>
+    }
+</article>
+<style>
+
+    .navbar-nav {
+        justify-content: flex-end;
+        position: relative;
+        right: 2em;
+    }
+
+        .navbar-nav > * {
+            margin: 0 1em;
+        }
+
+        .navbar-nav a {
+            color: var(--dark-accent);
+        }
+
+    #links > .navbar-nav > form > button {
+        border: var(--dark-accent) 2px solid;
+    }
+</style>

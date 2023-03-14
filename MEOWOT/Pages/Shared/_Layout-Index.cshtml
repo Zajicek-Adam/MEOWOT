@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MEOWOT</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MEOWOT.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="../Areas/Identity/Pages/Account/RegisterConfirmation.cshtml.css" asp-append-version="true" />
+    <link rel="stylesheet" href="../Areas/Identity/Pages/Account/UserGalleries.cshtml.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div id="logo">
+            <a id="logoa" asp-area="" asp-page="/Index">MEOWOT</a>
+            <img width="65" src="~/img/logo.svg" />
+        </div>
+        <div id="links">
+            <a asp-area="" asp-page="/Index">Home</a>
+            <a asp-area="" asp-page="/Browse">Browse</a>
+            <a asp-area="" asp-page="/UploadTUS">Upload</a>
+            <a asp-area="" asp-page="/UserGalleries">Gallery</a>
+        </div>
+    </nav>
+    <div class="container">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        }
+        @RenderBody()
+    </div>
+
+    <footer class="border-top footer text-muted">
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

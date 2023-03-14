@@ -1,0 +1,9 @@
+﻿#logo {
+    font-weight: 800;
+    color: #373737;
+    margin-left: 2em;
+}
+#links{
+    justify-content: left;
+    width: 500px;
+}

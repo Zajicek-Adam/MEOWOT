@@ -1,0 +1,10 @@
+﻿div.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(355px, max-content));
+    gap: 1em;
+    width: calc(100% - 5em);
+    margin: 0 2.5em;
+    justify-items: center;
+    grid-auto-flow: dense;
+    justify-content: center;
+}

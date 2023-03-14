@@ -1,0 +1,127 @@
+﻿@page
+@model MEOWOT.Pages.UploadTUSModel
+@{
+}
+<article class="full" style="display: flex;justify-content: center; align-items: center">
+    <form id="form" enctype="multipart/form-data" class="hidden" style="border-bottom: var(--gray) 2px solid; box-sizing:border-box; gap: 0.5em">
+        <h2>Upload images.</h2>
+        <input type="hidden" asp-for="UserId" id="userid" />
+        <div class="progress-container">
+            <div class="progress">
+                <div id="progress">Start uploading and track progress.</div>
+            </div>
+            <p id="counter"></p>
+        </div>
+        <div class="form-group" style="border: 2px var(--dark-accent) dashed; padding: 1em; width: 331px; box-sizing: border-box">
+            <input id="files" type="file" class="form-control-file" accept="image/*" multiple required />
+        </div>
+
+
+        <div class="checkbox" style="cursor: pointer; margin: 1.5em; ">
+            <label style="cursor: pointer" class="form-label">
+                <input id="ispublic" type="checkbox" style="cursor: pointer; width: 25px; height: 25px;" class="form-check-input" />
+                Make files public
+            </label>
+        </div>
+        <div>
+            <select id="galleryselect">
+                @foreach (var x in Model.Galleries)
+                {
+                    if (x.GetType() == typeof(MEOWOT.Model.DefaultGallery))
+                    {
+                        <option selected value="@x.Id">@x.GalleryName</option>
+                    }
+                    else
+                    {
+                        <option value="@x.Id">@x.GalleryName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div style="display: flex; justify-content: space-between; width: calc(275px + 4em);">
+            <button type="submit" class="">Upload</button>
+            <button type="reset" id="close-btn">Clear</button>
+        </div>
+    </form>
+    <div id="content-container-l" class="hidden">
+    </div>
+</article>
+@*<form id="form">
+        <input id="files" type="file">
+        <input id="ispublic" type="checkbox">jepublic
+        <button type="submit">Send</button>
+    </form>*@
+<style>
+
+    .navbar-nav {
+        justify-content: flex-end;
+        position: relative;
+        right: 2em;
+    }
+
+        .navbar-nav > * {
+            margin: 0 1em;
+        }
+
+        .navbar-nav a {
+            color: var(--dark-accent);
+        }
+
+    #links > .navbar-nav > form > button {
+        border: var(--dark-accent) 2px solid;
+    }
+</style>
+<script src="~/js/tus-min.js"></script>
+<script>
+    const user = document.getElementById("userid");
+    const uploadFileInput = document.getElementById("files");
+    const publicInput = document.getElementById("ispublic");
+    const gallerySelect = document.getElementById("galleryselect");
+    const progress = document.getElementById("progress")
+    const prg = document.querySelector(".prg")
+
+    document.getElementById("form").addEventListener("submit", e => {
+        e.preventDefault()
+        let uploads = []
+
+        for (let i = 0; i < uploadFileInput.files.length; i++) {
+            let file = uploadFileInput.files[i]
+            // Create a new tus upload
+            let upload = new tus.Upload(file, {
+                endpoint: `${window.location.origin}/files/`,
+                retryDelays: [0, 3000, 5000, 10000, 20000],
+                metadata: {
+                    filename: file.name,
+                    filetype: file.type,
+                    ispublic: publicInput.checked ? "1" : "0",
+                    gallery: gallerySelect.value.toString(),
+                    userid: user.value,
+                },
+                onError: function (error) {
+                    console.log("Error: " + error)
+                },
+                onProgress: function (bytesUploaded, bytesTotal) {
+                    var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
+                    progress.style.width = percentage + "%"
+                    progress.innerText = percentage + "%"
+                    counter.innerText = `${i + 1} of ${uploadFileInput.files.length}`
+                    console.log(bytesUploaded, bytesTotal, percentage + "%")
+                },
+                onSuccess: function () {
+                    console.log("Download %s from %s", upload.file.name, upload.url)
+                    if (i + 1 < uploadFileInput.files.length) {
+                        uploads[i + 1].start()
+                    }
+                    else {
+                        setTimeout(() => {
+                            window.location.href = "/"
+                        }, 50)
+                    }
+                }
+            })
+            uploads.push(upload)
+        }
+        // Start the upload
+        uploads[0].start()
+    })
+</script>
