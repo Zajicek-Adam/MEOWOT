@@ -1,6 +1,6 @@
 # MEOWOT
-![signup](https://imgur.com/jEEBVZS)
-![login](https://imgur.com/7fbCILJ)
-![upload](https://imgur.com/wFlPFKF)
-![photos](https://imgur.com/D5O8WsL)
-![discover](https://imgur.com/o4xocr9)
+![signup](https://i.imgur.com/jEEBVZS.png)
+![login](https://i.imgur.com/7fbCILJ.png)
+![upload](https://i.imgur.com/wFlPFKF.png)
+![photos](https://i.imgur.com/D5O8WsL.png)
+![discover](https://i.imgur.com/o4xocr9.png)
