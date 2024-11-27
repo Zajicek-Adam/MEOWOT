@@ -1,4 +1,5 @@
-# MEOWOT
+# MEOWOT, a cat-themed gallery app
+Made in C#, ASP.NET
 ![signup](https://i.imgur.com/jEEBVZS.png)
 ![login](https://i.imgur.com/7fbCILJ.png)
 ![upload](https://i.imgur.com/wFlPFKF.png)
